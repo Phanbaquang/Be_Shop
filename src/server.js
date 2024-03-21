@@ -1,29 +1,24 @@
 import express from 'express'
-import { mapOrder } from '~/utils/sorts.js'
+import connectDb from './config/mongodb'
+import { app, server } from './sockets/socket'
+const bodyParser = require('body-parser')
+const dotenv = require('dotenv')
+const path = require('path')
+const cors = require('cors')
+dotenv.config()
 
-const app = express()
-
+app.use(cors())
+app.options('*', cors())
 const hostname = 'localhost'
 const port = 8017
-
+app.use(bodyParser.json())
+connectDb()
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use('', require('./routes/v1/index'))
 app.get('/', (req, res) => {
-  console.log(
-    mapOrder(
-      [
-        { id: 'id-1', name: 'One' },
-        { id: 'id-2', name: 'Two' },
-        { id: 'id-3', name: 'Three' },
-        { id: 'id-4', name: 'Four' },
-        { id: 'id-5', name: 'Five' }
-      ],
-      ['id-5', 'id-4', 'id-2', 'id-3', 'id-1'],
-      'id'
-    )
-  )
   res.end('<h1>Hello World!</h1><hr>')
 })
-
-app.listen(port, hostname, () => {
+server.listen(port, hostname, () => {
   // eslint-disable-next-line no-console
-  console.log(` I am running at ${hostname}:${port}/`)
+  console.log(` I am running at ${hostname}:${port}`)
 })
