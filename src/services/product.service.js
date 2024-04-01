@@ -9,8 +9,8 @@ exports.getProduct = async ({ minPrice, maxPrice, categoryId }) => {
   if (minPrice !== undefined && maxPrice !== undefined) {
     query.price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
   }
-  if (categoryId !== undefined) {
-    query.category = categoryId
+  if (categoryId !== undefined && categoryId) {
+    query.category_id = categoryId
   }
   return await ProductModel.find(query).sort({ createdAt: -1 })
 }

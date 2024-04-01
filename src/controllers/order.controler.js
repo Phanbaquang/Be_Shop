@@ -46,13 +46,13 @@ const getOrderId = async (req, res) => {
 }
 const updateOrderId = async (req, res) => {
   try {
-    const OrderId = await findOrderId({ _id: req.query._id })
+    const OrderId = await findOrderId({ _id: req.body._id })
     if (!OrderId) {
       return res.status(403).json({ message: 'Order not exist' })
     }
     const Order = await updateAndCreateOrder({
       ...req.body,
-      _id: req.query._id
+      _id: req.body._id
     })
     return res.status(200).json(Order)
   } catch (err) {
