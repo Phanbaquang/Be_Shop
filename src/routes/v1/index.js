@@ -4,21 +4,21 @@ const {
   updateCategoryId,
   getCategoryId,
   deleteCategoryId
-} = require('~/controllers/category.controler')
+} = require('../../controllers/category.controler')
 const {
   createUserController,
   LoginController,
   refreshTokenController,
   updateUserId,
   getUserId
-} = require('~/controllers/login.controler')
+} = require('../../controllers/login.controler')
 const {
   productController,
   getProduct,
   getProductId,
   updateProductId,
   deleteProductId
-} = require('~/controllers/product.controler')
+} = require('../../controllers/product.controler')
 const {
   updateAndCreateContactId,
   getContactControler
@@ -48,8 +48,8 @@ const {
   updatePostsId
 } = require('../../controllers/posts.controler')
 const { getIntroControler, updateAndCreateIntroId } = require('../../controllers/intro.controler')
-const { asyncHandler } = require('~/utils/asyncHandle')
-const { authenToken } = require('~/utils/authenToken')
+const { asyncHandler } = require('../../utils/asyncHandle')
+const { authenToken } = require('../../utils/authenToken')
 const { uploadsMidleware } = require('../../middlewares/uploadMidleware')
 
 const router = require('express').Router()

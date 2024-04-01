@@ -1,5 +1,5 @@
 'use strict'
-const { calcTotalPriceOrder } = require('~/utils/algorithms')
+const { calcTotalPriceOrder } = require('../utils/algorithms')
 const {
   createOrder,
   getOrder,
