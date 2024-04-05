@@ -5,7 +5,6 @@ const paginate = (schema) => {
     if (!limit || parseInt(limit) < 0) {
       const obj = { ...rest }
       if (!limit && Object.keys(obj).length > 0) {
-        console.log('namdz')
         const filter = {}
         for (let key in obj) {
           if (key === 'price') {
@@ -31,7 +30,7 @@ const paginate = (schema) => {
           })
         })
       }
-      const countPromise = this.countDocuments(filter).exec()
+      const countPromise = this.countDocuments({}).exec()
       const docsPromise = this.find({}).sort({
         createdAt: -1
       })
