@@ -3,16 +3,17 @@ const ProductModel = require('../models/Product.model')
 exports.createProduct = async (data) => {
   return await ProductModel.create(data)
 }
-exports.getProduct = async ({ minPrice, maxPrice, categoryId }) => {
-  let query = {}
+exports.getProduct = async (query) => {
+  // let query = {}
 
-  if (minPrice !== undefined && maxPrice !== undefined) {
-    query.price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
-  }
-  if (categoryId !== undefined && categoryId) {
-    query.category_id = categoryId
-  }
-  return await ProductModel.find(query).sort({ createdAt: -1 })
+  // if (minPrice !== undefined && maxPrice !== undefined) {
+  //   query.price = { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) }
+  // }
+  // if (categoryId !== undefined && categoryId) {
+  //   query.category_id = categoryId
+  // }
+  // return await ProductModel.find(query).sort({ createdAt: -1 })
+  return await ProductModel.paginate(query)
 }
 exports.findProductByName = async (query) => {
   return await ProductModel.findOne({ productName: query.productName }).exec()

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { paginate } = require('./plugins/pagnigate')
 const Schema = mongoose.Schema
 const UserEnums = Object.freeze({
   ADMIN: '081999',
@@ -26,5 +27,5 @@ const userSchema = new Schema(
     timestamps: true
   }
 )
-
+userSchema.plugin(paginate)
 module.exports = mongoose.model('User', userSchema)

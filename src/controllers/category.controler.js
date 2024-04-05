@@ -26,7 +26,7 @@ const createCategory = async (req, res) => {
 }
 const getCategory = async (req, res) => {
   try {
-    const category = await service.getCategory()
+    const category = await service.getCategory(req.query)
     return res.status(200).json(category)
   } catch (err) {
     res.status(500).json({ error: err.message })

@@ -5,9 +5,11 @@ const {
   getOrder,
   updateAndCreateOrder,
   findOrderId,
-  deleteOrderId
+  deleteOrderId,
+  getOrderByMonth
 } = require('../services/order.service')
 const { createTransaction } = require('../services/transaction.service')
+const { createNoti } = require('../services/notification.service.js')
 
 const createOrderControler = async (req, res) => {
   try {
@@ -17,8 +19,15 @@ const createOrderControler = async (req, res) => {
       res.status(500).json({ error: 'transaction error' })
     }
     const transaction = await createTransaction({
+      phone: req.body.phone,
+      name: req.body.customer_name,
       order_id: order._id,
       customer_id: req.body.customer_id
+    })
+    await createNoti({
+      order_id: order._id,
+      customer_id: req.body.customer_id,
+      message: ''
     })
     return res.status(200).json({ order, transaction })
   } catch (err) {
@@ -32,6 +41,24 @@ const getOrderControler = async (req, res) => {
       order,
       totalCount: order.length
     })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+
+const getOrderMonthControler = async (req, res) => {
+  try {
+    const response = await getOrderByMonth(req.query)
+    const monthsArray = Array.from({ length: 12 }, (_, i) => i + 1)
+
+    const finalResult = monthsArray.map((month) => {
+      const foundMonth = response.find((item) => item.month === month)
+      return {
+        month: month,
+        count: foundMonth ? foundMonth.count : 0
+      }
+    })
+    return res.status(200).json(finalResult)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -78,5 +105,6 @@ module.exports = {
   getOrderControler,
   getOrderId,
   updateOrderId,
-  deleteOrderIdControler
+  deleteOrderIdControler,
+  getOrderMonthControler
 }

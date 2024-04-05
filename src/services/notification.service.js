@@ -1,15 +1,15 @@
 const NotificationModel = require('../models/Notification.model')
 
-exports.createOrder = async (data) => {
+exports.createNoti = async (data) => {
   return await NotificationModel.create(data)
 }
-exports.getOrder = async (query) => {
+exports.getNoti = async (query) => {
   return await NotificationModel.find(query)
 }
-exports.findOrderId = async (query) => {
+exports.findNotiId = async (query) => {
   return await NotificationModel.findOne({ _id: query._id }).exec()
 }
-exports.updateAndCreateOrder = async (query) => {
+exports.updateAndCreateNoti = async (query) => {
   return await NotificationModel.findOneAndUpdate(
     {
       _id: query._id
@@ -22,6 +22,6 @@ exports.updateAndCreateOrder = async (query) => {
     { new: true }
   )
 }
-exports.deleteOrderId = async (query) => {
+exports.deleteNotiId = async (query) => {
   return await NotificationModel.deleteOne({ _id: query._id })
 }

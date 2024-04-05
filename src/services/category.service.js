@@ -14,8 +14,9 @@ exports.updateAndCreateCategory = async (category) => {
   )
 }
 
-exports.getCategory = async () => {
-  return await CategoryModel.find({}).sort({ createdAt: -1 })
+exports.getCategory = async (query) => {
+  return await CategoryModel.paginate(query)
+  // return await CategoryModel.find({}).sort({ createdAt: -1 })
 }
 exports.createCategory = async (data) => {
   return await CategoryModel.create(data)

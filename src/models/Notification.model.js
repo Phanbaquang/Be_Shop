@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const orderSchema = new Schema(
+const notiSchema = new Schema(
   {
     customer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     order_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
@@ -9,4 +9,4 @@ const orderSchema = new Schema(
   },
   { timestamps: true }
 )
-module.exports = mongoose.model('Notification', orderSchema)
+module.exports = mongoose.model('Notification', notiSchema)

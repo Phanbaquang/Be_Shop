@@ -25,12 +25,8 @@ const productController = async (req, res) => {
 
 const getProduct = async (req, res) => {
   try {
-    const { minPrice, maxPrice, categoryId } = req.query
-    const product = await productService.getProduct({ minPrice, maxPrice, categoryId })
-    return res.status(200).json({
-      product,
-      totalCount: product.length
-    })
+    const product = await productService.getProduct(req.query)
+    return res.status(200).json(product)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

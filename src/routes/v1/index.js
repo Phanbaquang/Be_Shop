@@ -10,7 +10,10 @@ const {
   LoginController,
   refreshTokenController,
   updateUserId,
-  getUserId
+  getUserId,
+  getUser,
+  deleteUserId,
+  getUserByMonthControler
 } = require('../../controllers/login.controler')
 const {
   productController,
@@ -32,13 +35,15 @@ const {
   getOrderControler,
   getOrderId,
   deleteOrderIdControler,
-  updateOrderId
+  updateOrderId,
+  getOrderMonthControler
 } = require('../../controllers/order.controler')
 const {
   getTransactionControler,
   deleteTransactionIdControler,
   getTransactionId,
-  updateTransactionId
+  updateTransactionId,
+  getTransactionMonthControler
 } = require('../../controllers/transaction.controler')
 const {
   createPostsController,
@@ -47,20 +52,25 @@ const {
   getPostsId,
   updatePostsId
 } = require('../../controllers/posts.controler')
+
+const { getNotiController, updateNotiId } = require('../../controllers/noti.controler')
 const { getIntroControler, updateAndCreateIntroId } = require('../../controllers/intro.controler')
 const { asyncHandler } = require('../../utils/asyncHandle')
 const { authenToken } = require('../../utils/authenToken')
 const { uploadsMidleware } = require('../../middlewares/uploadMidleware')
 
 const router = require('express').Router()
-router.post('/v1/api/create', asyncHandler(createUserController))
+router.post('/v1/api/create', uploadsMidleware.single('image'), asyncHandler(createUserController))
 router.put(
   '/v1/api/userId',
   authenToken,
   uploadsMidleware.single('image'),
   asyncHandler(updateUserId)
 )
+router.get('/v1/api/user-month', authenToken, asyncHandler(getUserByMonthControler))
+router.get('/v1/api/user', authenToken, asyncHandler(getUser))
 router.get('/v1/api/userId', authenToken, asyncHandler(getUserId))
+router.delete('/v1/api/userId', authenToken, asyncHandler(deleteUserId))
 router.post('/v1/api/login', asyncHandler(LoginController))
 router.post('/v1/api/refreshToken', asyncHandler(refreshTokenController))
 router.get('/v1/api/book', authenToken, asyncHandler(productController))
@@ -115,12 +125,14 @@ router.get('/v1/api/footer', authenToken, asyncHandler(getfooterControler))
 
 // order
 router.post('/v1/api/order', authenToken, asyncHandler(createOrderControler))
+router.get('/v1/api/order-month', authenToken, asyncHandler(getOrderMonthControler))
 router.get('/v1/api/order', authenToken, asyncHandler(getOrderControler))
 router.get('/v1/api/orderId', authenToken, asyncHandler(getOrderId))
 router.put('/v1/api/orderId', authenToken, asyncHandler(updateOrderId))
 router.delete('/v1/api/orderId', authenToken, asyncHandler(deleteOrderIdControler))
 // transaction
 router.get('/v1/api/transaction', authenToken, asyncHandler(getTransactionControler))
+router.get('/v1/api/transaction-month', authenToken, asyncHandler(getTransactionMonthControler))
 router.put('/v1/api/transactionId', authenToken, asyncHandler(updateTransactionId))
 router.get('/v1/api/transactionId', authenToken, asyncHandler(getTransactionId))
 router.delete('/v1/api/transactionId', authenToken, asyncHandler(deleteTransactionIdControler))
@@ -138,5 +150,8 @@ router.post(
   asyncHandler(updateAndCreateIntroId)
 )
 router.get('/v1/api/intro', authenToken, asyncHandler(getIntroControler))
+// thong bao
+router.get('/v1/api/noti', authenToken, asyncHandler(getNotiController))
+router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))
 
 module.exports = router

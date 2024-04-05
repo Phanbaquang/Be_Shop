@@ -35,7 +35,7 @@ const orderSchema = new Schema(
     products: [productSchema],
     shipping_address: shippingAddressSchema,
     total_price: { type: String },
-    customer_name: { type: String, default: '' },
+    customer_name: { type: String, required: true },
     status: {
       type: String,
       enum: Object.values(OrderStatus),
