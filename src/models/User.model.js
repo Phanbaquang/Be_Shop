@@ -9,7 +9,7 @@ const UserEnums = Object.freeze({
 const userSchema = new Schema(
   {
     mail: { type: String, required: true, unique: true },
-    phone: { type: String, required: false, default: '' },
+    phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: false, default: '' },
     address: { type: String, required: false, default: '' },

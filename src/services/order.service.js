@@ -4,7 +4,9 @@ exports.createOrder = async (data) => {
   return await OrderModel.create(data)
 }
 exports.getOrder = async (query) => {
-  return await OrderModel.find(query)
+  return await OrderModel.find(query).sort({
+    createdAt: -1
+  })
 }
 exports.getOrderByMonth = async () => {
   const year = new Date().getFullYear()

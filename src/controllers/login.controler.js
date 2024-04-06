@@ -7,16 +7,17 @@ dotenv.config()
 
 const createUserController = async (req, res) => {
   try {
-    const { mail } = req.body
+    const { mail, phone } = req.body
     const user = await service.findUserByEmail({ mail })
-    if (user) {
+    const phoneSearch = await service.findUserByPhone({ phone })
+    if (user || phoneSearch) {
       cloudinary.uploader.destroy(req.file?.filename)
-      return res.status(500).json({ message: 'user exist' })
+      return res.status(500).json({ message: 'Tài khoản đã tồn tại' })
     }
     const response = await service.createUser({
       ...req.body,
-      image: req.file.path,
-      imageName: req.file?.filename
+      image: req?.file?.path ?? '',
+      imageName: req?.file?.filename ?? []
     })
     return res.json({ data: response, status: 'success' })
   } catch (err) {
@@ -107,10 +108,10 @@ const LoginController = async (req, res) => {
     const data = req.body
     const user = await service.findUserByEmail({ mail: data.mail })
     if (!user) {
-      return res.status(500).json({ message: 'email and phone not exist' })
+      return res.status(500).json({ message: 'Tài khoản không tồn tại' })
     }
     if (user.password !== req.body.password) {
-      return res.status(500).json({ message: 'email and password không chính xác' })
+      return res.status(500).json({ message: 'Tài khoản hoặc mật khẩu không chính xác' })
     }
     const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: '8h'

@@ -81,7 +81,7 @@ router.post(
   authenToken,
   asyncHandler(createCategory)
 )
-router.get('/v1/api/category', authenToken, asyncHandler(getCategory))
+router.get('/v1/api/category', asyncHandler(getCategory))
 router.get('/v1/api/categoryId', authenToken, asyncHandler(getCategoryId))
 router.put(
   '/v1/api/categoryId',
@@ -97,7 +97,7 @@ router.post(
   uploadsMidleware.array('image[]'),
   asyncHandler(productController)
 )
-router.get('/v1/api/product', authenToken, asyncHandler(getProduct))
+router.get('/v1/api/product', asyncHandler(getProduct))
 router.get('/v1/api/productId', authenToken, asyncHandler(getProductId))
 router.put(
   '/v1/api/productId',
@@ -113,7 +113,7 @@ router.post(
   uploadsMidleware.single('image'),
   asyncHandler(updateAndCreateContactId)
 )
-router.get('/v1/api/contact', authenToken, asyncHandler(getContactControler))
+router.get('/v1/api/contact', asyncHandler(getContactControler))
 // footer
 router.post(
   '/v1/api/footer',
@@ -121,7 +121,7 @@ router.post(
   uploadsMidleware.single('image'),
   asyncHandler(updateAndCreatefooterId)
 )
-router.get('/v1/api/footer', authenToken, asyncHandler(getfooterControler))
+router.get('/v1/api/footer', asyncHandler(getfooterControler))
 
 // order
 router.post('/v1/api/order', authenToken, asyncHandler(createOrderControler))
@@ -138,7 +138,7 @@ router.get('/v1/api/transactionId', authenToken, asyncHandler(getTransactionId))
 router.delete('/v1/api/transactionId', authenToken, asyncHandler(deleteTransactionIdControler))
 // bai viet
 router.post('/v1/api/posts', authenToken, asyncHandler(createPostsController))
-router.get('/v1/api/posts', authenToken, asyncHandler(getPostsController))
+router.get('/v1/api/posts', asyncHandler(getPostsController))
 router.get('/v1/api/postId', authenToken, asyncHandler(getPostsId))
 router.put('/v1/api/postId', authenToken, asyncHandler(updatePostsId))
 router.delete('/v1/api/postId', authenToken, asyncHandler(deletePostsId))
@@ -149,7 +149,7 @@ router.post(
   uploadsMidleware.single('image'),
   asyncHandler(updateAndCreateIntroId)
 )
-router.get('/v1/api/intro', authenToken, asyncHandler(getIntroControler))
+router.get('/v1/api/intro', asyncHandler(getIntroControler))
 // thong bao
 router.get('/v1/api/noti', authenToken, asyncHandler(getNotiController))
 router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))

@@ -78,3 +78,6 @@ exports.deleteUserId = async (query) => {
 exports.findUserByEmail = async (query) => {
   return await UserModel.findOne({ mail: query.mail }).exec()
 }
+exports.findUserByPhone = async (query) => {
+  return await UserModel.findOne({ phone: query.phone }).exec()
+}
