@@ -3,19 +3,24 @@ const service = require('../services/service')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const cloudinary = require('cloudinary').v2
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 dotenv.config()
 
 const createUserController = async (req, res) => {
   try {
-    const { mail, phone } = req.body
+    const { mail, phone, password } = req.body
     const user = await service.findUserByEmail({ mail })
     const phoneSearch = await service.findUserByPhone({ phone })
     if (user || phoneSearch) {
       cloudinary.uploader.destroy(req.file?.filename)
       return res.status(500).json({ message: 'Tài khoản đã tồn tại' })
     }
+    const hash = await bcrypt.hash(password, saltRounds)
+
     const response = await service.createUser({
       ...req.body,
+      password: hash,
       image: req?.file?.path ?? '',
       imageName: req?.file?.filename ?? []
     })
@@ -94,7 +99,6 @@ const deleteUserId = async (req, res) => {
       return res.status(403).json({ message: 'user not exist' })
     }
     await service.deleteUserId({ _id: req.query._id })
-    console.log(req.query)
     cloudinary.api.delete_resources(req.query?.imageName)
     return res.status(200).json({
       message: 'delete success !'
@@ -110,7 +114,8 @@ const LoginController = async (req, res) => {
     if (!user) {
       return res.status(500).json({ message: 'Tài khoản không tồn tại' })
     }
-    if (user.password !== req.body.password) {
+    const byHash = await bcrypt.compare(req.body.password, user.password)
+    if (!byHash) {
       return res.status(500).json({ message: 'Tài khoản hoặc mật khẩu không chính xác' })
     }
     const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
@@ -121,8 +126,8 @@ const LoginController = async (req, res) => {
       accessToken,
       refreshToken,
       user: user._id,
-      mail: data.mail,
-      password: data.password
+      mail: user.mail,
+      password: user.password
     })
     if (!authToken) {
       return res.status(500).json({ message: 'login failed' })
@@ -137,15 +142,15 @@ const refreshTokenController = async (req, res) => {
     const data = req.body
     const refreshToken = req.body.token
     if (!refreshToken) {
-      return res.status(401).json('ko co uy quyen ')
+      return res.status(401).json('Không có ủy quyền')
     }
     const user = await service.findUserByEmail({ mail: data.mail })
     if (!user) {
-      return res.status(500).json({ message: 'email and phone not exist' })
+      return res.status(500).json({ message: 'email and phone không tồn tại' })
     }
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, data) => {
       if (err) {
-        return res.status(401).json('refresh token ko hop le ')
+        return res.status(401).json('refresh token không hợp lệ')
       }
       const accessToken = jwt.sign(
         { mail: data.mail, password: data.password },
