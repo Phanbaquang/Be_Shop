@@ -48,6 +48,15 @@ const updateProductId = async (req, res) => {
       cloudinary.api.delete_resources((file) => file.filename)
       return res.status(403).json({ message: 'product not exist' })
     }
+    if (!path) {
+      const product = await productService.updateAndCreateProduct({
+        ...req.body,
+        _id: req.body._id,
+        image: productId.image,
+        imageName: productId.imageName
+      })
+      return res.status(200).json(product)
+    }
     const product = await productService.updateAndCreateProduct({
       ...req.body,
       _id: req.body._id,

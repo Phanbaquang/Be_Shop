@@ -98,7 +98,7 @@ router.post(
   asyncHandler(productController)
 )
 router.get('/v1/api/product', asyncHandler(getProduct))
-router.get('/v1/api/productId', authenToken, asyncHandler(getProductId))
+router.get('/v1/api/productId', asyncHandler(getProductId))
 router.put(
   '/v1/api/productId',
   uploadsMidleware.array('image[]'),
