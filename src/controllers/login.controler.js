@@ -107,6 +107,7 @@ const deleteUserId = async (req, res) => {
     res.status(500).json({ error: err.message })
   }
 }
+
 const LoginController = async (req, res) => {
   try {
     const data = req.body
@@ -126,6 +127,7 @@ const LoginController = async (req, res) => {
       accessToken,
       refreshToken,
       user: user._id,
+      role: user.role,
       mail: user.mail,
       password: user.password
     })

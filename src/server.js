@@ -2,10 +2,11 @@ const express = require('express')
 const connectDb = require('./config/mongodb')
 
 const bodyParser = require('body-parser')
+const { app, server } = require('./sockets/socket')
 const dotenv = require('dotenv')
 const path = require('path')
 const cors = require('cors')
-const app = express()
+// const app = express()
 dotenv.config()
 
 app.use(cors())
@@ -19,7 +20,7 @@ app.use('', require('./routes/v1/index'))
 app.get('/', (req, res) => {
   res.end('<h1>Hello World!</h1><hr>')
 })
-app.listen(port, hostname, () => {
+server.listen(port, hostname, () => {
   // eslint-disable-next-line no-console
   console.log(` I am running at ${hostname}:${port}`)
 })

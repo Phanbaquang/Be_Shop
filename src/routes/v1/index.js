@@ -58,6 +58,7 @@ const { getIntroControler, updateAndCreateIntroId } = require('../../controllers
 const { asyncHandler } = require('../../utils/asyncHandle')
 const { authenToken } = require('../../utils/authenToken')
 const { uploadsMidleware } = require('../../middlewares/uploadMidleware')
+const { getMessages, sendMessage } = require('../../controllers/chat-controler/chat.controler')
 
 const router = require('express').Router()
 router.post('/v1/api/create', uploadsMidleware.single('image'), asyncHandler(createUserController))
@@ -153,5 +154,8 @@ router.get('/v1/api/intro', asyncHandler(getIntroControler))
 // thong bao
 router.get('/v1/api/noti', authenToken, asyncHandler(getNotiController))
 router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))
+// test
+router.get('/v1/api/chat/:id', getMessages)
+router.post('/v1/api/send/:id', sendMessage)
 
 module.exports = router
