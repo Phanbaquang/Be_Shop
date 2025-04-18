@@ -11,10 +11,12 @@ const productController = async (req, res) => {
       cloudinary.api.delete_resources(req.files.map((file) => file.filename))
       return res.status(403).json({ message: 'product exist' })
     }
+
     const product = await productService.createProduct({
       ...data,
       image: path.substring(0, path.lastIndexOf(',')),
-      imageName: req.files.map((file) => file.filename)
+      imageName: req.files.map((file) => file.filename),
+      sizeDetail: JSON.parse(req.body.sizeDetail)
     })
     res.status(200).json({ status: 'Success', data: product })
   } catch (err) {

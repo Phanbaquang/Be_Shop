@@ -9,22 +9,36 @@ const productSchema = new Schema(
     imageName: { type: Array, default: [] },
     price: { type: String, required: true },
     description: { type: String, required: true },
-    category_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category'
-    },
+    descriptionDetail: { type: String, required: true },
+    category_id: { type: String },
+    sale: Number,
     type: { type: String },
-    status: { type: Boolean, required: true },
-    inStore: { type: String, required: true },
+    // status: { type: Boolean, required: true },
+    inStore: { type: String, },
     weight: { type: String },
-    size: { type: String },
-    color: { type: String },
+    color: { type: [String] },
     promoteType: { type: Boolean },
     promotePrice: {
       type: String,
       enum: ['percentage', 'fixed'],
       default: 'fixed'
-    }
+    },
+    // size: { type: String }
+    sizeDetail: [
+      {
+        color: {
+          name: { type: String, required: true },
+          codeColor: { type: String, required: true },
+          id: { type: String, required: true }
+        },
+        size: [
+          {
+            sizeName: { type: String, required: true },
+            quantity: { type: Number, required: true }
+          }
+        ]
+      }
+    ]
   },
   {
     timestamps: true

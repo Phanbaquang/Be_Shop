@@ -12,7 +12,7 @@ dotenv.config()
 
 app.use(cors())
 app.options('*', cors())
-const hostname = 'localhost'
+const hostname = '0.0.0.0'
 const port = 8017
 app.use(bodyParser.json())
 connectDb()
