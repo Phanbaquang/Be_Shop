@@ -14,7 +14,9 @@ const config = {
 }
 
 const zalopayment = async (req, res) => {
-    const embed_data = {};
+    const embed_data = {
+
+    };
 
     const items = [{
         name: 'Áo thun nam',
@@ -37,7 +39,7 @@ const zalopayment = async (req, res) => {
         amount: 80000,
         description: `Lazada - Payment for the order #${transID}`,
         bank_code: 'zalopayapp',
-        callback_url: 'https://c64e-2405-4802-1d83-8060-c8da-f197-2ed0-bae1.ngrok-free.app/api/orders/callback-zalopay',
+        callback_url: 'https://be-shop-olpu.onrender.com/api/orders/callback-zalopay',
 
     };
 
