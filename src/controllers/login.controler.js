@@ -12,9 +12,10 @@ const createUserController = async (req, res) => {
     const { mail, phone, password } = req.body
     const user = await service.findUserByEmail({ mail })
     const phoneSearch = await service.findUserByPhone({ phone })
+    console.log(phone)
     if (user || phoneSearch) {
       cloudinary.uploader.destroy(req.file?.filename)
-      return res.status(500).json({ message: 'Tài khoản đã tồn tại' })
+      return res.status(200).json({ message: 'Tài khoản đã tồn tại', error: 1 })
     }
     const hash = await bcrypt.hash(password, saltRounds)
 
@@ -113,11 +114,11 @@ const LoginController = async (req, res) => {
     const data = req.body
     const user = await service.findUserByEmail({ mail: data.mail })
     if (!user) {
-      return res.status(500).json({ message: 'Tài khoản không tồn tại' })
+      return res.status(200).json({ message: 'Tài khoản không tồn tại', error: 1 })
     }
     const byHash = await bcrypt.compare(req.body.password, user.password)
     if (!byHash) {
-      return res.status(500).json({ message: 'Tài khoản hoặc mật khẩu không chính xác' })
+      return res.status(200).json({ message: 'Tài khoản hoặc mật khẩu không chính xác', error: 1 })
     }
     const accessToken = jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: '8h'
