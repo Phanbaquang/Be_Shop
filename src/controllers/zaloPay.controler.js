@@ -16,7 +16,16 @@ const config = {
 const zalopayment = async (req, res) => {
     const embed_data = {};
 
-    const items = [{}];
+    const items = [{
+        name: 'Áo thun nam',
+        quantity: 1,
+        price: 50000,
+        color: 'Đen',
+        id: '123456',
+        id_version: '123456',
+        keyColor: 'color',
+        image: 'https://example.com/image.jpg',
+    }];
     const transID = Math.floor(Math.random() * 1000000);
     const order = {
         app_id: config.app_id,
@@ -25,10 +34,10 @@ const zalopayment = async (req, res) => {
         app_time: Date.now(), // miliseconds
         item: JSON.stringify(items),
         embed_data: JSON.stringify(embed_data),
-        amount: 50000,
+        amount: 80000,
         description: `Lazada - Payment for the order #${transID}`,
         bank_code: 'zalopayapp',
-        callback_url: 'https://be-shop-olpu.onrender.com/api/orders/callback-zalopay',
+        callback_url: 'https://c64e-2405-4802-1d83-8060-c8da-f197-2ed0-bae1.ngrok-free.app/api/orders/callback-zalopay',
 
     };
 
@@ -37,13 +46,15 @@ const zalopayment = async (req, res) => {
     order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
 
     axios.post(config.endpoint, null, { params: order })
-        .then(res => {
-            console.log(res.data);
+        .then(_res => {
+            res.status(200).json(_res.data)
         })
         .catch(err => console.log(err));
 }
 
 const callbackZalopayment = async (req, res) => {
+    console.log(req.body, 'callbackZalopayment')
+
     let result = {}
     try {
         let dataStr = req.body.data

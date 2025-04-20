@@ -159,7 +159,7 @@ router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))
 router.get('/v1/api/chat/:id', getMessages)
 router.post('/v1/api/send/:id', sendMessage)
 router.post('/api/orders/zalopay', zalopayment)
-router.post('api/orders/callback-zalopay', callbackZalopayment)
+router.post('/api/orders/callback-zalopay', callbackZalopayment)
 
 
 module.exports = router
