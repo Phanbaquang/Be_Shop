@@ -52,7 +52,7 @@ const {
   getPostsId,
   updatePostsId
 } = require('../../controllers/posts.controler')
-const { zalopayment } = require('../../controllers/zaloPay.controler')
+const { zalopayment, callbackZalopayment } = require('../../controllers/zaloPay.controler')
 
 const { getNotiController, updateNotiId } = require('../../controllers/noti.controler')
 const { getIntroControler, updateAndCreateIntroId } = require('../../controllers/intro.controler')
@@ -159,5 +159,7 @@ router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))
 router.get('/v1/api/chat/:id', getMessages)
 router.post('/v1/api/send/:id', sendMessage)
 router.post('/api/orders/zalopay', zalopayment)
+router.post('api/orders/callback-zalopay', callbackZalopayment)
+
 
 module.exports = router
