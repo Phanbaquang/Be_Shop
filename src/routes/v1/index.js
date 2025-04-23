@@ -80,7 +80,7 @@ router.get('/v1/api/book', authenToken, asyncHandler(productController))
 router.post(
   '/v1/api/category',
   uploadsMidleware.single('image'),
-  authenToken,
+  // authenToken,
   asyncHandler(createCategory)
 )
 router.get('/v1/api/category', asyncHandler(getCategory))
@@ -88,14 +88,12 @@ router.get('/v1/api/categoryId', authenToken, asyncHandler(getCategoryId))
 router.put(
   '/v1/api/categoryId',
   uploadsMidleware.single('image'),
-  authenToken,
   asyncHandler(updateCategoryId)
 )
-router.delete('/v1/api/categoryId', authenToken, asyncHandler(deleteCategoryId))
+router.delete('/v1/api/categoryId', asyncHandler(deleteCategoryId))
 // product
 router.post(
   '/v1/api/product',
-  authenToken,
   uploadsMidleware.array('image[]'),
   asyncHandler(productController)
 )
@@ -104,10 +102,9 @@ router.get('/v1/api/productId', asyncHandler(getProductId))
 router.put(
   '/v1/api/productId',
   uploadsMidleware.array('image[]'),
-  authenToken,
   asyncHandler(updateProductId)
 )
-router.delete('/v1/api/productId', authenToken, asyncHandler(deleteProductId))
+router.delete('/v1/api/productId', asyncHandler(deleteProductId))
 // contact
 router.post(
   '/v1/api/contact',
@@ -158,8 +155,8 @@ router.put('/v1/api/noti', authenToken, asyncHandler(updateNotiId))
 // test
 router.get('/v1/api/chat/:id', getMessages)
 router.post('/v1/api/send/:id', sendMessage)
-router.post('/api/orders/zalopay', zalopayment)
-router.post('/api/orders/callback-zalopay', callbackZalopayment)
+router.post('/v1/api/orders/zalopay', zalopayment)
+router.post('/v1/api/orders/callback-zalopay', callbackZalopayment)
 
 
 module.exports = router

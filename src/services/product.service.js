@@ -1,5 +1,5 @@
 const ProductModel = require('../models/Product.model')
-
+const mongoose = require('mongoose');
 exports.createProduct = async (data) => {
   return await ProductModel.create(data)
 }
@@ -37,3 +37,30 @@ exports.updateAndCreateProduct = async (product) => {
 exports.deleteProductId = async (query) => {
   return await ProductModel.deleteOne({ _id: query._id })
 }
+
+exports.updateQuantityInProduct = async (item) => {
+  const productId = new mongoose.Types.ObjectId(item.id);  // Đảm bảo dùng new
+  const sizeDetailId = new mongoose.Types.ObjectId(item.idSize);  // Đảm bảo dùng new
+  const sizeId = new mongoose.Types.ObjectId(item.idSizeDetail);  // Đảm bảo dùng new
+  const quantityToSubtract = item.quantity; // Số lượng cần trừ đi
+
+  // Cập nhật số lượng trong sản phẩm
+  await ProductModel.updateOne(
+    {
+      _id: productId,
+      'sizeDetail._id': sizeDetailId,
+      'sizeDetail.size._id': sizeId
+    },
+    {
+      $inc: {
+        'sizeDetail.$[outer].size.$[inner].quantity': -quantityToSubtract // Trừ số lượng
+      }
+    },
+    {
+      arrayFilters: [
+        { 'outer._id': sizeDetailId }, // Lọc theo sizeDetail
+        { 'inner._id': sizeId } // Lọc theo size trong sizeDetail
+      ]
+    }
+  );
+};

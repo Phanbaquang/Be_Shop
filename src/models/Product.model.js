@@ -13,6 +13,7 @@ const productSchema = new Schema(
     category_id: { type: String },
     sale: Number,
     type: { type: String },
+    hot: { type: Boolean, default: false },
     // status: { type: Boolean, required: true },
     inStore: { type: String, },
     weight: { type: String },

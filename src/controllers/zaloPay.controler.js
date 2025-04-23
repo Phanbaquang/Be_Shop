@@ -3,6 +3,8 @@
 const axios = require('axios').default // npm install axios
 const CryptoJS = require('crypto-js') // npm install crypto-js
 const moment = require('moment')
+const UserShippingInfo = require('../models/OrderDetail.model')
+const updateQuantityInProduct = require('../services/product.service').updateQuantityInProduct
 // const paymentService = require('../../services/payment.service')
 // const ProductModel = require('../../models/Product.model')
 
@@ -15,31 +17,28 @@ const config = {
 
 const zalopayment = async (req, res) => {
     const embed_data = {
-
+        redirecturl: 'http://localhost:3000/ordersystem'
     };
+    const { inforShip, price, items } = req.body
 
-    const items = [{
-        name: 'Áo thun nam',
-        quantity: 1,
-        price: 50000,
-        color: 'Đen',
-        id: '123456',
-        id_version: '123456',
-        keyColor: 'color',
-        image: 'https://example.com/image.jpg',
-    }];
+    const orderDetails = [
+        {
+            ...inforShip,
+            items: items
+        }
+    ]
     const transID = Math.floor(Math.random() * 1000000);
     const order = {
         app_id: config.app_id,
         app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
         app_user: 'user123',
         app_time: Date.now(), // miliseconds
-        item: JSON.stringify(items),
+        item: JSON.stringify(orderDetails),
         embed_data: JSON.stringify(embed_data),
-        amount: 80000,
-        description: `Lazada - Payment for the order #${transID}`,
+        amount: price,
+        description: `Panda - Payment for the order #${transID}`,
         bank_code: 'zalopayapp',
-        callback_url: 'https://be-shop-olpu.onrender.com/api/orders/callback-zalopay',
+        callback_url: 'https://a478-2405-4802-1cbf-b910-7101-e538-54c1-a2cb.ngrok-free.app/v1/api/orders/callback-zalopay',
 
     };
 
@@ -55,18 +54,39 @@ const zalopayment = async (req, res) => {
 }
 
 const callbackZalopayment = async (req, res) => {
-    console.log(req.body, 'callbackZalopayment')
-
     let result = {}
     try {
         let dataStr = req.body.data
         let reqMac = req.body.mac
         let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString()
-        console.log('mac =', mac)
         if (reqMac !== mac) {
             result.return_code = -1
             result.return_message = 'mac not equal'
         } else {
+
+            let data = JSON.parse(dataStr)?.item
+            let dataItem = JSON.parse(data)?.[0]
+            console.log(dataItem, 'dataItem');
+            const cleanedItems = dataItem.items.map(item => ({
+                id: item.id,
+                idSize: item.idSize,
+                idSizeDetail: item.idSizeDetail,
+                totTalQuantity: item.totTalQuantity,
+                quantity: item.quantity
+            }));
+            const newShipping = new UserShippingInfo({
+                userId: dataItem.userId,
+                name: dataItem.name,
+                phone: dataItem.phone,
+                address: dataItem.address,
+                email: dataItem.email,
+                note: dataItem.note,
+                items: cleanedItems
+            });
+            await newShipping.save()
+            for (const item of dataItem.items) {
+                await updateQuantityInProduct(item);
+            }
 
             result.return_code = 1
             result.return_message = 'success'
