@@ -1,10 +1,17 @@
 const OrderModel = require('../models/Order.model')
+const OrderDetail = require('../models/OrderDetail.model')
+
 
 exports.createOrder = async (data) => {
   return await OrderModel.create(data)
 }
 exports.getOrder = async (query) => {
   return await OrderModel.find(query).sort({
+    createdAt: -1
+  })
+}
+exports.getOrderDetail = async (query) => {
+  return await OrderDetail.find(query).sort({
     createdAt: -1
   })
 }
@@ -53,6 +60,7 @@ exports.updateAndCreateOrder = async (query) => {
     { new: true }
   )
 }
+
 exports.deleteOrderId = async (query) => {
   return await OrderModel.deleteOne({ _id: query._id })
 }

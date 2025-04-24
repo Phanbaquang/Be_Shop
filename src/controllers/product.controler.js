@@ -27,6 +27,7 @@ const productController = async (req, res) => {
 
 const getProduct = async (req, res) => {
   try {
+    console.log(req.query)
     const product = await productService.getProduct(req.query)
     return res.status(200).json(product)
   } catch (err) {
@@ -41,39 +42,76 @@ const getProductId = async (req, res) => {
     res.status(500).json({ error: err.message })
   }
 }
+// const updateProductId = async (req, res) => {
+//   try {
+//     let path = ''
+//     req.files.forEach((files) => (path = path + files.path + ','))
+//     const productId = await productService.findProductById({ _id: req.body._id })
+//     if (!productId) {
+//       cloudinary.api.delete_resources((file) => file.filename)
+//       return res.status(403).json({ message: 'product not exist' })
+//     }
+//     if (!path) {
+//       const product = await productService.updateAndCreateProduct({
+//         ...req.body,
+//         _id: req.body._id,
+//         image: productId.image,
+//         imageName: productId.imageName
+//       })
+//       return res.status(200).json(product)
+//     }
+//     const product = await productService.updateAndCreateProduct({
+//       ...req.body,
+//       _id: req.body._id,
+//       image: path.substring(0, path.lastIndexOf(',')),
+//       imageName: req.files.map((file) => file.filename)
+//     })
+//     cloudinary.api.delete_resources(req.body?.imageName.split(','), (err, result) => {
+//       console.log(err, result)
+//     })
+//     return res.status(200).json(product)
+//   } catch (err) {
+//     cloudinary.api.delete_resources(req.files.map((file) => file.filename))
+//     res.status(500).json({ error: err.message })
+//   }
+// }
 const updateProductId = async (req, res) => {
   try {
-    let path = ''
-    req.files.forEach((files) => (path = path + files.path + ','))
-    const productId = await productService.findProductById({ _id: req.body._id })
-    if (!productId) {
-      cloudinary.api.delete_resources((file) => file.filename)
-      return res.status(403).json({ message: 'product not exist' })
+    // Ghép đường dẫn ảnh mới
+    let path = req.files?.map(file => file.path).join(',') || '';
+
+    // Tìm sản phẩm cần update
+    const product = await productService.findProductById({ _id: req.body._id });
+    if (!product) {
+      return res.status(403).json({ message: 'Product not exist' });
     }
-    if (!path) {
-      const product = await productService.updateAndCreateProduct({
-        ...req.body,
-        _id: req.body._id,
-        image: productId.image,
-        imageName: productId.imageName
-      })
-      return res.status(200).json(product)
-    }
-    const product = await productService.updateAndCreateProduct({
+
+    // Nếu không có ảnh mới → giữ ảnh cũ
+    const updatedProduct = await productService.updateAndCreateProduct({
       ...req.body,
-      _id: req.body._id,
-      image: path.substring(0, path.lastIndexOf(',')),
-      imageName: req.files.map((file) => file.filename)
-    })
-    cloudinary.api.delete_resources(req.body?.imageName.split(','), (err, result) => {
-      console.log(err, result)
-    })
-    return res.status(200).json(product)
+      sizeDetail: JSON.parse(req.body.sizeDetail),
+      image: path || product.image,
+      imageName: req.files?.length > 0
+        ? req.files.map(file => file.filename)
+        : product.imageName
+    });
+
+    // Nếu có ảnh mới → xóa ảnh cũ trên cloudinary
+    if (req.files?.length > 0 && req.body?.imageName) {
+      cloudinary.api.delete_resources(req.body.imageName.split(','), (err, result) => {
+        console.log('Cloudinary delete:', err, result);
+      });
+    }
+
+    return res.status(200).json(updatedProduct);
   } catch (err) {
-    cloudinary.api.delete_resources(req.files.map((file) => file.filename))
-    res.status(500).json({ error: err.message })
+    // Nếu lỗi, xóa ảnh vừa upload (nếu có)
+    if (req.files?.length > 0) {
+      cloudinary.api.delete_resources(req.files.map(file => file.filename));
+    }
+    res.status(500).json({ error: err.message });
   }
-}
+};
 const deleteProductId = async (req, res) => {
   try {
     if (!req.query?.imageName) return res.status(403).json({ message: 'product image not exist' })

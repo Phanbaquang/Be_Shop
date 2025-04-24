@@ -66,7 +66,6 @@ const callbackZalopayment = async (req, res) => {
 
             let data = JSON.parse(dataStr)?.item
             let dataItem = JSON.parse(data)?.[0]
-            console.log(dataItem, 'dataItem');
             const cleanedItems = dataItem.items.map(item => ({
                 id: item.id,
                 idSize: item.idSize,

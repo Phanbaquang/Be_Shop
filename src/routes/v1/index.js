@@ -36,7 +36,8 @@ const {
   getOrderId,
   deleteOrderIdControler,
   updateOrderId,
-  getOrderMonthControler
+  getOrderMonthControler,
+  getOrderDetailControler
 } = require('../../controllers/order.controler')
 const {
   getTransactionControler,
@@ -124,6 +125,7 @@ router.get('/v1/api/footer', asyncHandler(getfooterControler))
 
 // order
 router.post('/v1/api/order', authenToken, asyncHandler(createOrderControler))
+router.get('/v1/api/order-detail', asyncHandler(getOrderDetailControler))
 router.get('/v1/api/order-month', authenToken, asyncHandler(getOrderMonthControler))
 router.get('/v1/api/order', authenToken, asyncHandler(getOrderControler))
 router.get('/v1/api/orderId', authenToken, asyncHandler(getOrderId))

@@ -15,6 +15,9 @@ exports.getProduct = async (query) => {
   // return await ProductModel.find(query).sort({ createdAt: -1 })
   return await ProductModel.paginate(query)
 }
+// exports.getProduct = async (query, options = {}) => {
+//   return await ProductModel.paginate(query, options);
+// };
 exports.findProductByName = async (query) => {
   return await ProductModel.findOne({ productName: query.productName }).exec()
 }

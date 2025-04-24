@@ -6,7 +6,8 @@ const {
   updateAndCreateOrder,
   findOrderId,
   deleteOrderId,
-  getOrderByMonth
+  getOrderByMonth,
+  getOrderDetail
 } = require('../services/order.service')
 const { createTransaction } = require('../services/transaction.service')
 const { createNoti } = require('../services/notification.service.js')
@@ -37,6 +38,17 @@ const createOrderControler = async (req, res) => {
 const getOrderControler = async (req, res) => {
   try {
     const order = await getOrder(req.query)
+    return res.status(200).json({
+      order,
+      totalCount: order.length
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+}
+const getOrderDetailControler = async (req, res) => {
+  try {
+    const order = await getOrderDetail(req.query)
     return res.status(200).json({
       order,
       totalCount: order.length
@@ -106,5 +118,6 @@ module.exports = {
   getOrderId,
   updateOrderId,
   deleteOrderIdControler,
-  getOrderMonthControler
+  getOrderMonthControler,
+  getOrderDetailControler
 }
