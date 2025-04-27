@@ -17,7 +17,7 @@ const config = {
 
 const zalopayment = async (req, res) => {
     const embed_data = {
-        redirecturl: 'http://localhost:3000/ordersystem'
+        redirecturl: 'http://localhost:3000'
     };
     const { inforShip, price, items } = req.body
 
@@ -38,7 +38,7 @@ const zalopayment = async (req, res) => {
         amount: price,
         description: `Panda - Payment for the order #${transID}`,
         bank_code: 'zalopayapp',
-        callback_url: 'https://a478-2405-4802-1cbf-b910-7101-e538-54c1-a2cb.ngrok-free.app/v1/api/orders/callback-zalopay',
+        callback_url: 'https://be-shop-olpu.onrender.com/v1/api/orders/callback-zalopay',
 
     };
 
