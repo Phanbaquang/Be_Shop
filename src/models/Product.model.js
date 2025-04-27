@@ -24,6 +24,8 @@ const productSchema = new Schema(
       enum: ['percentage', 'fixed'],
       default: 'fixed'
     },
+    tag: { type: [Number], default: [] },
+    sub_category_id: { type: String },
     // size: { type: String }
     sizeDetail: [
       {

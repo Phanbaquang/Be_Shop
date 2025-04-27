@@ -6,6 +6,13 @@ const {
   deleteCategoryId
 } = require('../../controllers/category.controler')
 const {
+  createSubCategory,
+  getSubCategory,
+  updateSubCategoryId,
+  getSubCategoryId,
+  deleteSubCategoryId
+} = require('../../controllers/subcategory.controler')
+const {
   createUserController,
   LoginController,
   refreshTokenController,
@@ -92,6 +99,22 @@ router.put(
   asyncHandler(updateCategoryId)
 )
 router.delete('/v1/api/categoryId', asyncHandler(deleteCategoryId))
+
+router.post(
+  '/v1/api/sub_category',
+  uploadsMidleware.single('image'),
+  // authenToken,
+  asyncHandler(createSubCategory)
+)
+
+router.get('/v1/api/sub_category', asyncHandler(getSubCategory))
+router.get('/v1/api/sub_categoryId', authenToken, asyncHandler(getSubCategoryId))
+router.put(
+  '/v1/api/sub_categoryId',
+  uploadsMidleware.single('image'),
+  asyncHandler(updateSubCategoryId)
+)
+router.delete('/v1/api/sub_categoryId', asyncHandler(deleteSubCategoryId))
 // product
 router.post(
   '/v1/api/product',

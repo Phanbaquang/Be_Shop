@@ -16,7 +16,8 @@ const productController = async (req, res) => {
       ...data,
       image: path.substring(0, path.lastIndexOf(',')),
       imageName: req.files.map((file) => file.filename),
-      sizeDetail: JSON.parse(req.body.sizeDetail)
+      sizeDetail: JSON.parse(req.body.sizeDetail),
+      tag: JSON.parse(req.body.tag)
     })
     res.status(200).json({ status: 'Success', data: product })
   } catch (err) {
